@@ -1,0 +1,122 @@
+<div class="slideout-content">
+  <!-- Modal to add new user starts-->
+  <div class="modalsd modal-slide-in sdfade new-user-modal" id="modals-slide-in">
+    <div class="modal-dialog">
+      <form class="add-new-user modal-content pt-0" (ngSubmit)="(newUserForm.form.valid)" #newUserForm="ngForm">
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+          (click)="toggleSidebar('new-provider-sidebar')"
+        >
+          ×
+        </button>
+        <div class="modal-header mb-1">
+          <h5 class="modal-title" id="exampleModalLabel">Novo Fornecedor</h5>
+        </div>
+        <div class="modal-body flex-grow-1">
+          <div class="form-group">
+            <label class="form-label" for="basic-icon-default-fullname">Nome Fantasia</label>
+            <input
+              type="text"
+              class="form-control dt-full-name"
+              id="basic-icon-default-fullname"
+              placeholder="Distribuidora Exemplo"
+              name="user-fullname"
+              [(ngModel)]="fantasyName"
+              [class.error]="newUserForm.submitted && FNameRef.invalid"
+              #FNameRef="ngModel"
+              required
+              aria-label="Distribuidora Exemplo"
+              aria-describedby="basic-icon-default-fullname2"
+            />
+            <span *ngIf="newUserForm.submitted && FNameRef.invalid" class="invalid-form">
+              <small class="form-text text-danger" *ngIf="FNameRef.errors.required">Este campo é obrigatório</small>
+            </span>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="basic-icon-default-uname">Razão Social</label>
+            <input
+              type="text"
+              id="basic-icon-default-uname"
+              class="form-control dt-uname"
+              placeholder="Distribuidora Exemplo LTDA"
+              aria-label="jdoe1"
+              aria-describedby="basic-icon-default-uname2"
+              name="user-name"
+              [(ngModel)]="socialName"
+              [class.error]="newUserForm.submitted && FUserNameRef.invalid"
+              #FUserNameRef="ngModel"
+              required
+            />
+            <span *ngIf="newUserForm.submitted && FUserNameRef.invalid" class="invalid-form">
+              <small class="form-text text-danger" *ngIf="FUserNameRef.errors.required">Este campo é obrigatório</small>
+            </span>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="basic-icon-default-uname">Número de Inscrição</label>
+            <input
+              type="text"
+              id="basic-icon-default-uname"
+              class="form-control dt-uname"
+              placeholder="000000"
+              aria-label="jdoe1"
+              aria-describedby="basic-icon-default-uname2"
+              name="user-name"
+              [(ngModel)]="inscription"
+              [class.error]="newUserForm.submitted && FUserNameRef.invalid"
+              #FUserNameRef="ngModel"
+              required
+            />
+            <span *ngIf="newUserForm.submitted && FUserNameRef.invalid" class="invalid-form">
+              <small class="form-text text-danger" *ngIf="FUserNameRef.errors.required">Este campo é obrigatório</small>
+            </span>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="basic-icon-default-uname">CNPJ</label>
+            <input
+              type="text"
+              id="basic-icon-default-uname"
+              class="form-control dt-uname"
+              placeholder="00.000.000-0000-00"
+              aria-label="jdoe1"
+              aria-describedby="basic-icon-default-uname2"
+              name="user-name"
+              [(ngModel)]="cnpj"
+              [class.error]="newUserForm.submitted && FUserNameRef.invalid"
+              #FUserNameRef="ngModel"
+              required
+            />
+            <span *ngIf="newUserForm.submitted && FUserNameRef.invalid" class="invalid-form">
+              <small class="form-text text-danger" *ngIf="FUserNameRef.errors.required">Este campo é obrigatório</small>
+            </span>
+          </div>
+
+          <ngb-alert [type]="'danger'" [dismissible]="false" *ngFor="let error of errors">
+            <h4 class="alert-heading">{{error.title}}</h4>
+            <div class="alert-body">
+              {{error.message}}
+            </div>
+          </ngb-alert>
+          
+          <button type="submit" class="btn btn-primary mr-1" (click)="submit(newUserForm)" rippleEffect>Salvar</button>
+          <button
+            type="reset"
+            class="btn btn-outline-secondary"
+            (click)="toggleSidebar('new-provider-sidebar')"
+            rippleEffect
+          >
+            Cancelar
+          </button>
+        </div>
+        
+      </form>
+
+      
+
+      <app-toast-container [ngStyle]="toastStyle" aria-live="polite" aria-atomic="true"></app-toast-container>
+    </div>
+  </div>
+  <!-- Modal to add new user Ends-->
+</div>
