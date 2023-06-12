@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule, Routes } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -20,6 +20,10 @@ import { LayoutModule } from 'app/layout/layout.module';
 import { ProviderModule } from 'app/main/provider/provider.module';
 import { SampleModule } from './main/sample/sample.module';
 import { FakeDbService } from '@fake-db/fake-db.service';
+import { registerLocaleData } from '@angular/common';
+import localePt from '@angular/common/locales/pt';
+
+registerLocaleData(localePt);
 
 const appRoutes: Routes = [
   {
@@ -29,6 +33,14 @@ const appRoutes: Routes = [
   {
     path: 'fornecedores',
     loadChildren: () => import('./main/provider/provider.module').then(m => m.ProviderModule)
+  },
+  {
+    path: 'categorias',
+    loadChildren: () => import('./main/charge/charge.module').then(m => m.ChargeModule)
+  },
+  {
+    path: 'despesas',
+    loadChildren: () => import('./main/charge/charge.module').then(m => m.ChargeModule)
   },
   {
     path: '',
@@ -43,6 +55,7 @@ const appRoutes: Routes = [
 
 @NgModule({
   declarations: [AppComponent],
+  providers:[{ provide: LOCALE_ID, useValue: 'pt'}],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -75,4 +88,6 @@ const appRoutes: Routes = [
 
   bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule {
+  
+}

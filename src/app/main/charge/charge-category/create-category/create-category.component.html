@@ -1,0 +1,148 @@
+<div class="slideout-content">
+    <!-- Modal to add new user starts-->
+    <div class="modalsd modal-slide-in sdfade new-user-modal" id="modals-slide-in">
+      <div class="modal-dialog">
+        <form class="add-new-user modal-content pt-0" (ngSubmit)="(newUserForm.form.valid)" #newUserForm="ngForm">
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+            (click)="toggleSidebar('create-category')"
+          >
+            ×
+          </button>
+          <div class="modal-header mb-1">
+            <h5 class="modal-title" id="exampleModalLabel">Nova Categoria</h5>
+          </div>
+          <div class="modal-body flex-grow-1">
+            <div class="form-group">
+              <label class="form-label" for="basic-icon-default-fullname">Descrição</label>
+              <input
+                type="text"
+                class="form-control dt-full-name"
+                id="basic-icon-default-description"
+                placeholder="Descrição"
+                name="user-description"
+                [(ngModel)]="description"
+                [class.error]="newUserForm.submitted && FNameRef.invalid"
+                #FNameRef="ngModel"
+                required
+                aria-label="Descrição"
+                aria-describedby="basic-icon-default-description2"
+              />
+              <span *ngIf="newUserForm.submitted && FNameRef.invalid" class="invalid-form">
+                <small class="form-text text-danger" *ngIf="FNameRef.errors.required">Este campo é obrigatório</small>
+              </span>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="basic-icon-default-uname">Número Identificador</label>
+              <input
+                type="text"
+                id="basic-icon-default-uname"
+                class="form-control dt-uname"
+                placeholder="Número Identificador"
+                aria-label="jdoe1"
+                aria-describedby="basic-icon-default-uname2"
+                name="user-name"
+                [(ngModel)]="identifierNumber"
+                [class.error]="newUserForm.submitted && FUserNameRef.invalid"
+                #FUserNameRef="ngModel"
+                required
+              />
+              <span *ngIf="newUserForm.submitted && FUserNameRef.invalid" class="invalid-form">
+                <small class="form-text text-danger" *ngIf="FUserNameRef.errors.required">Este campo é obrigatório</small>
+              </span>
+            </div>
+
+            <ngb-alert [type]="'danger'" [dismissible]="false" *ngFor="let error of errors">
+              <h4 class="alert-heading">{{error.title}}</h4>
+              <div class="alert-body">
+                {{error.message}}
+              </div>
+            </ngb-alert>
+
+            <!-- Sub Categories-->
+            <div class="card-body invoice-padding invoice-product-details">
+                <form class="source-item">
+                  <div data-repeater-list="group-a">
+                    <div class="repeater-wrapper" data-repeater-item *ngFor="let item of items; let i = index">
+                      <div class="row">
+
+                        <div class="col-md-12 col-lg-12">
+                            <div class="card">
+                              <div class="card-body">
+                                <h4 class="card-title">
+                                    <button (click)="deleteItem(i)" class="btn p-0">
+                                        <i data-feather="x" [size]="18" class="cursor-pointer"></i>
+                                    </button>
+                                    Sub-Categoria
+                                </h4>
+                                <p class="card-text">
+                                    <label class="form-label" for="basic-icon-default-uname">Descrição</label>
+                                    <input
+                                        type="text"
+                                        id="basic-icon-default-uname"
+                                        class="form-control dt-uname"
+                                        placeholder="Número Identificador"
+                                        [ngModelOptions]="{standalone: true}"
+                                        aria-label="jdoe1"
+                                        [(ngModel)]="item.description"
+                                        required
+                                    />
+                                    <label class="form-label" for="basic-icon-default-uname">Número Identificador</label>
+                                    <input
+                                        type="text"
+                                        id="basic-icon-default-uname"
+                                        class="form-control dt-uname"
+                                        [(ngModel)]="item.identifierNumber"
+                                        placeholder="Número Identificador"
+                                        [ngModelOptions]="{standalone: true}"
+                                        aria-label="jdoe1"
+                                        required
+                                    />
+                                </p>
+                              </div>
+                            </div>
+                        </div>
+
+
+                        
+                        <br/>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row mt-1">
+                    <div class="col-12 px-0">
+                      <button type="button" class="btn btn-primary btn-sm btn-add-new" (click)="addItem()" rippleEffect>
+                        <i data-feather="plus" class="mr-25"></i>
+                        <span class="align-middle">Sub-Categoria</span>
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            
+            <!--/ Sub Categories-->
+
+            <button type="submit" class="btn btn-primary mr-1" (click)="submit(newUserForm)" rippleEffect>Salvar</button>
+            <button
+              type="reset"
+              class="btn btn-outline-secondary"
+              (click)="toggleSidebar('create-category')"
+              rippleEffect
+            >
+              Cancelar
+            </button>
+          </div>
+          
+        </form>
+  
+        
+  
+        <app-toast-container [ngStyle]="toastStyle" aria-live="polite" aria-atomic="true"></app-toast-container>
+      </div>
+    </div>
+    <!-- Modal to add new user Ends-->
+  </div>
+  

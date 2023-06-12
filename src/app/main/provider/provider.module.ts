@@ -16,6 +16,7 @@ import { CoreSidebarModule } from '@core/components';
 import { InvoiceListService } from './list-provider/invoice-list.service';
 import { newProviderSidebarComponent } from './list-provider/new-provider-sidebar/new-provider-sidebar.component';
 import { ProviderService } from './list-provider/provider.service';
+import { ContentHeaderModule } from 'app/layout/components/content-header/content-header.module';
 
 const routes = [
   {
@@ -31,6 +32,7 @@ const routes = [
     newProviderSidebarComponent
   ],
   imports: [
+    ContentHeaderModule,
     CommonModule,
     RouterModule.forChild(routes),
     CoreCommonModule,

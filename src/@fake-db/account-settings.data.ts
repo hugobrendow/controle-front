@@ -4,7 +4,7 @@ export class accountSettingsFakeData {
       general: {
         avatar: 'assets/images/portrait/small/avatar-s-11.jpg',
         username: 'johndoe',
-        fullName: 'John Doe',
+        fullName: 'Hugo Brendow',
         email: 'granger007@hogward.com',
         company: 'IBM Technology'
       },

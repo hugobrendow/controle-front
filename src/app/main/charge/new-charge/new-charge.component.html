@@ -1,0 +1,290 @@
+<div class="content-wrapper container-xxl p-0">
+  <div class="content-body">
+    <section class="invoice-add-wrapper">
+      <div class="row invoice-add">
+        <!-- Invoice Add Left starts -->
+        <div class="col-xl-9 col-md-8 col-12">
+          <div class="card invoice-preview-card">
+            <!-- Header starts -->
+            <div class="card-body invoice-padding pb-0">
+              <div class="d-flex justify-content-between flex-md-row flex-column invoice-spacing mt-0">
+                <div>
+                  <div class="logo-wrapper">
+                    <h3 class="text-primary invoice-logo">Drogaria Origem</h3>
+                  </div>
+                  <p class="card-text mb-25">QSE 4 LOTE 1 LOJA 3</p>
+                  <p class="card-text mb-25">Taguatinga-Sul, Brasília/DF</p>
+                  <p class="card-text mb-0">(61) 99465-3313, (61) 3554-7097</p>
+                </div>
+                <div class="invoice-number-date mt-md-0 mt-2">
+                  <div class="d-flex align-items-center justify-content-md-end mb-1">
+                    <h4 class="invoice-title">Nº da Despesa</h4>
+                    <div class="input-group input-group-merge invoice-edit-input-group disabled">
+                      <div class="input-group-prepend">
+                        <div class="input-group-text">
+                          <i data-feather="hash"></i>
+                        </div>
+                      </div>
+                      <input type="text" class="form-control invoice-edit-input" value="5037" placeholder="53634"
+                        disabled />
+                    </div>
+                  </div>
+                  <div class="d-flex align-items-center mb-1">
+                    <span class="title">Lançamento:</span>
+
+                    <form class="form-inline">
+                      <div class="form-group">
+                        <div class="input-group">
+                          <input class="form-control" placeholder="yyyy-mm-dd" name="Custom Footer Date Picker"
+                            [(ngModel)]="charge.date" ngbDatepicker #customFooterDP="ngbDatepicker"
+                            [footerTemplate]="footerTemplate">
+                          <div class="input-group-append">
+                            <button class="btn btn-outline-secondary feather icon-calendar" (click)="customFooterDP.toggle()"
+                              type="button" rippleEffect></button>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                    <ng-template #footerTemplate>
+                      <hr class="my-0">
+                      <button class="btn btn-primary btn-sm m-2 float-left"
+                        (click)="customFooterDPdata = today; customFooterDP.close()" rippleEffect>Hoje</button>
+                      <button class="btn btn-secondary btn-sm m-2 float-right" (click)="customFooterDP.close()" rippleEffect>Fechar</button>
+                    </ng-template>
+
+
+                  </div>
+                  <div class="d-flex align-items-center mb-1">
+                    <span class="title">Nota Fiscal</span>
+                    <input type="text" class="form-control ml-50" id="invoice" [(ngModel)]="charge.invoice" name="chargeInvoice"
+                      placeholder="Nota Fiscal" />
+                  </div>
+                  <div class="d-flex align-items-center mb-1">
+                    <span class="title">NF Comp.</span>
+                    <input type="text" class="form-control ml-50" id="complementInvoice" name="chargeComplementInvoice"
+                      [(ngModel)]="charge.complementInvoice" placeholder="Nota Fiscal Complementar" />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Header ends -->
+
+            <hr class="invoice-spacing" />
+
+            <!-- Address and Contact starts -->
+            <div class="card-body invoice-padding pt-0">
+              <div class="row row-bill-to invoice-spacing">
+                <div class="col-xl-8 mb-lg-1 col-bill-to pl-0">
+                  <h6 class="invoice-to-title">Fornecedor</h6>
+                  <ng-select [items]="providers" [(ngModel)]="charge.provider" bindLabel="name" bindValue="name"></ng-select>
+                </div>
+                <div class="col-xl-4 pl-0 pl-xl-1 pl-md-0 mt-xl-0 mt-2">
+                  <h6 class="mb-2">Detalhes da despesa</h6>
+                  <table>
+                    <tbody>
+                      <tr>
+                        <td class="pr-1">Total</td>
+                        <td><strong>R$ {{getTotalBoletos()}}</strong></td>
+                      </tr>
+                      <tr>
+                        <td class="pr-1">Nº de Boletos</td>
+                        <td>{{items.length}}</td>
+                      </tr>
+                      <tr>
+                        <td class="pr-1">Última Parcela</td>
+                        <td>{{getUltimaParcela()}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <!-- Address and Contact ends -->
+
+            <div class="card-body invoice-padding">
+              <div class="row invoice-sales-total-wrapper">
+                <div class="col-md-6 order-md-1 order-2 mt-md-0 mt-3">
+                  <label for="amountValue" class="form-label">Valor Nota</label>
+                  <div class="d-flex align-items-center mb-1">
+                    <input type="text" class="form-control ml-30" id="amountValue" [(ngModel)]="charge.amountValue" name="chargeAmountValue"
+                      placeholder="Valor da Nota" />
+                  </div>
+
+                  <label for="liquidValue" class="form-label">Valor Líquido</label>
+                  <div class="d-flex align-items-center mb-1">
+                    <input type="text" class="form-control ml-30" id="liquidValue" [(ngModel)]="charge.liquidValue" name="chargeLiquidValue"
+                      placeholder="Valor Líquido" />
+                  </div>
+                </div>
+
+                <div class="col-md-6 order-md-1 order-2 mt-md-0 mt-3">
+                  <label for="salesperson" class="form-label">Categoria</label>
+                  <ng-select [items]="categories" [(ngModel)]="categorySelected" bindLabel="name" bindValue="name" (change)="loadSubCategory()"></ng-select>
+
+                  <label for="salesperson" class="form-label">Sub-Categoria</label>
+                  <ng-select [items]="subCategories" [(ngModel)]="subCategorySelected" bindLabel="name" bindValue="name"></ng-select>
+                </div>
+              </div>
+            </div>
+
+
+            <!-- Installments -->
+            <div class="card-body invoice-padding invoice-product-details">
+              <form action="#" class="invoice-repeater">
+                <div *ngFor="let item of items; let i = index">
+                  <ngb-accordion #acc="ngbAccordion" activeIds="ngb-panel-0">
+                    <ngb-panel>
+                      <ng-template ngbPanelTitle>
+                        <div class="card-header">
+                          <h4 class="card-title">Boleto <br /><small class="text-muted">Banco Inter</small></h4>
+                          <div>
+                            <span class="badge badge-pill badge-light-warning mr-1" *ngIf="item.statusCode == false || item.statusCode == null">Pendente</span>
+                            <span class="badge badge-pill badge-success" *ngIf="item.statusCode == true">Pago</span>
+                            <br/><small class="text-muted">{{getDateBoleto(item.dueDate)}}</small>
+                          </div>
+                          
+                        </div>
+                      </ng-template>
+                      <ng-template ngbPanelContent>
+                        <div class="row d-flex align-items-end">
+                          <div class="col-md-4 col-12">
+                            <div class="form-group">
+                              <label for="itemCost">Data de Vencimento</label>
+                              <my-date-picker name="dp{{i}}" [(ngModel)]="item.dueDate" required></my-date-picker>
+                            </div>
+                          </div>
+      
+                          <div class="col-md-4 col-12">
+                            <div class="form-group">
+                              <label for="itemQuantity{{ i }}">Valor do Vencimento</label>
+                              <input type="number" class="form-control" [(ngModel)]="item.value"  name="item{{i}}value" placeholder="R$ 0,00" />
+                            </div>
+                          </div>
+
+                          
+                          <div class="col-md-2 col-12">
+                            <div class="custom-control custom-switch custom-switch-success" style="padding-bottom: 1.4em;">
+                              <input type="checkbox" class="custom-control-input "  [(ngModel)]="item.statusCode" name="item{{i}}isPaid" id="item{{i}}isPaid" />
+                              <label class="custom-control-label" for="item{{i}}isPaid">
+                                <p class="mb-50">Pago</p>
+                              </label>
+                            </div>
+                          </div>
+      
+                          <div class="col-md-4 col-12" *ngIf="item.statusCode">
+                            <div class="form-group">
+                              <label for="itemCost">Data de Pagamento</label>
+                              <my-date-picker name="dp{{i}}paymentDate" [(ngModel)]="item.paymentDate"></my-date-picker>
+                            </div>
+                          </div>
+      
+                          <div class="col-md-4 col-12" *ngIf="item.statusCode">
+                            <div class="form-group">
+                              <label for="itemCost">Valor Pago</label>
+                              <input type="number" class="form-control" name="item{{i}}paidValue" [(ngModel)]="item.paidValue" placeholder="R$ 0,00" />
+                            </div>
+                          </div>
+      
+      
+      
+                          <div class="col-md-12 col-12">
+                            <div class="form-group">
+                              <label for="itemCost">Código de Barras / Chave Pix</label>
+                              <input type="string" class="form-control"  name="item{{i}}barcode" [(ngModel)]="item.barcode"
+                                placeholder="8949461894984 6515648916 6548964631668 8949461894984" />
+                            </div>
+                          </div>
+      
+                          <div class="col-md-2 col-12 mb-50">
+                            <div class="form-group">
+                              <button class="btn btn-outline-danger text-nowrap px-1" (click)="deleteItem(i)" rippleEffect>
+                                <i data-feather="x" class="mr-25"></i>
+                                <span>Remover</span>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </ng-template>
+                    </ngb-panel>
+                  </ngb-accordion>
+                  
+                  
+                  <hr />
+                </div>
+                <div class="row mt-1">
+                  <div class="col-12 px-0">
+                    <button type="button" class="btn btn-primary btn-sm btn-add-new" (click)="addItem()" rippleEffect>
+                      <i data-feather="plus" class="mr-25"></i>
+                      <span class="align-middle">Boleto</span>
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <!-- Product Details ends -->
+
+            <!-- Invoice Total starts -->
+            <div class="card-body invoice-padding">
+              <div class="row invoice-sales-total-wrapper">
+                <div class="col-md-6 order-md-1 order-2 mt-md-0 mt-3">
+
+                </div>
+                <div class="col-md-6 d-flex justify-content-end order-md-2 order-1">
+                  <div class="invoice-total-wrapper">
+                    <div class="invoice-total-item">
+                      <p class="invoice-total-title">Total Boletos:</p>
+                      <p class="invoice-total-amount">{{getTotalBoletos()}}</p>
+                    </div>
+                    <div class="invoice-total-item">
+                      <p class="invoice-total-title">Total Pago:</p>
+                      <p class="invoice-total-amount">{{getTotalPago()}}</p>
+                    </div>
+                    <hr class="my-50" />
+                    <div class="invoice-total-item">
+                      <p class="invoice-total-title">Total Pendente:</p>
+                      <p class="invoice-total-amount">{{getTotalPendente()}}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Invoice Total ends -->
+
+            <hr class="invoice-spacing mt-0" />
+
+          </div>
+        </div>
+        <!-- Invoice Add Left ends -->
+
+        <!-- Invoice Add Right starts -->
+        <div class="col-xl-3 col-md-4 col-12 mt-md-0 mt-2">
+          <div class="card">
+            <div class="card-body">
+              <button class="btn btn-primary btn-block mb-75" disabled rippleEffect>
+                Salvar Rascunho
+              </button>
+              <button type="button" class="btn btn-outline-primary btn-block" rippleEffect (click)="save()">
+                Salvar
+              </button>
+            </div>
+          </div>
+          <div class="mt-2">
+            <p class="mb-50">Tipo de Pagamento</p>
+            <select class="form-control">
+              <option value="Boleto">Boleto</option>
+              <option value="PIX">Pix</option>
+              <option value="TED">TED</option>
+            </select>
+          </div>
+        </div>
+        <!-- Invoice Add Right ends -->
+      </div>
+    </section>
+  </div>
+
+  <!-- Add New Customer Sidebar -->
+  <core-sidebar class="modal modal-slide-in sidebar-todo-modal fade" name="invoide-add-sidebar"
+    overlayClass="modal-backdrop">
+  </core-sidebar>
+  <!--/  Add New Customer Sidebar -->
+</div>

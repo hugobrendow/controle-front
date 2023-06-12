@@ -1,4 +1,4 @@
-import { Component, Inject, OnDestroy, OnInit, ElementRef, Renderer2 } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit, ElementRef, Renderer2, Compiler } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { Title } from '@angular/platform-browser';
 
@@ -57,7 +57,8 @@ export class AppComponent implements OnInit, OnDestroy {
     private _coreLoadingScreenService: CoreLoadingScreenService,
     private _coreMenuService: CoreMenuService,
     private _coreTranslationService: CoreTranslationService,
-    private _translateService: TranslateService
+    private _translateService: TranslateService,
+    private _compiler: Compiler,
   ) {
     // Get the application main menu
     this.menu = menu;
@@ -89,6 +90,7 @@ export class AppComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     // Init wave effect (Ripple effect)
+    this._compiler.clearCache();
     Waves.init();
 
     // Subscribe to config changes

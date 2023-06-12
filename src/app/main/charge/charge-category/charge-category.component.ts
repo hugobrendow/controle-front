@@ -5,26 +5,22 @@ import { takeUntil } from 'rxjs/operators';
 import { ColumnMode, DatatableComponent } from '@swimlane/ngx-datatable';
 
 import { CoreConfigService } from '@core/services/config.service';
-import { InvoiceListService } from './invoice-list.service';
 import { CoreSidebarService } from '@core/components/core-sidebar/core-sidebar.service';
-import { ProviderService } from './provider.service';
 import { NgbModal, NgbToast } from '@ng-bootstrap/ng-bootstrap';
-import { HttpClient } from '@angular/common/http';
-import { ToastService } from '@core/services/toast.service';
 import { Router } from '@angular/router';
-import { Provider } from '../Provider';
-
+import { ChargeCategory } from 'app/entities/ChargeCategory';
+import { ChargeCategoryService } from '../charge.category.service';
 
 @Component({
-  selector: 'app-list-provider',
-  templateUrl: './list-provider.component.html',
-  styleUrls: ['./list-provider.component.scss'],
+  selector: 'app-charge-category',
+  templateUrl: './charge-category.component.html',
+  styleUrls: ['./charge-category.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class ListProviderComponent implements OnInit, OnDestroy {
+export class ChargeCategoryComponent implements OnInit, OnDestroy {
   // HEADER
   contentHeader = {
-    headerTitle: 'Fornecedores',
+    headerTitle: 'Categorias de Despesa',
     actionButton: true,
     breadcrumb: {
       type: '',
@@ -40,7 +36,7 @@ export class ListProviderComponent implements OnInit, OnDestroy {
           link: '/parametros'
         },
         {
-          name: 'Fornecedores',
+          name: 'Categorias',
           isLink: false
         }
       ]
@@ -51,21 +47,12 @@ export class ListProviderComponent implements OnInit, OnDestroy {
   public data: any;
   public selectedOption = 10;
   public ColumnMode = ColumnMode;
-  public selectStatus: any = [
-    { name: 'All', value: '' },
-    { name: 'Downloaded', value: 'Downloaded' },
-    { name: 'Draft', value: 'Draft' },
-    { name: 'Paid', value: 'Paid' },
-    { name: 'Partial Payment', value: 'Partial Payment' },
-    { name: 'Past Due', value: 'Past Due' },
-    { name: 'Sent', value: 'Sent' }
-  ];
 
   public selectedStatus = [];
   public searchValue = '';
   public errors = [];
 
-  public providerRemove;
+  public categoryRemove;
 
   // decorator
   @ViewChild(DatatableComponent) table: DatatableComponent;
@@ -80,7 +67,7 @@ export class ListProviderComponent implements OnInit, OnDestroy {
 
   public success;
 
-  public providerEdit = new Provider();
+  public chargeCategoryEdit = new ChargeCategory();
 
   /**
    * Constructor
@@ -90,11 +77,10 @@ export class ListProviderComponent implements OnInit, OnDestroy {
    * @param {InvoiceListService} _invoiceListService
    */
   constructor(
-    private _providerService: ProviderService,
+    private _chargeCategoryService: ChargeCategoryService,
     private _coreConfigService: CoreConfigService,
     private _coreSidebarService: CoreSidebarService,
     private modalService: NgbModal,
-    private httpClient: HttpClient,
     private router: Router
     ) {
     this._unsubscribeAll = new Subject();
@@ -110,7 +96,6 @@ export class ListProviderComponent implements OnInit, OnDestroy {
    */
   filterUpdate(event) {
     // Reset ng-select on search
-    this.selectedStatus = this.selectStatus[0];
 
     const val = event.target.value.toLowerCase();
 
@@ -155,9 +140,9 @@ export class ListProviderComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this._providerService.getDataTableRows();
+    this._chargeCategoryService.getDataTableRows();
     this._coreConfigService.config.pipe(takeUntil(this._unsubscribeAll)).subscribe(config => {
-        this._providerService.onInvoiceListChanged.pipe(takeUntil(this._unsubscribeAll)).subscribe(response => {
+        this._chargeCategoryService.onInvoiceListChanged.pipe(takeUntil(this._unsubscribeAll)).subscribe(response => {
           this.data = response;
           this.rows = this.data;
           this.tempData = this.rows;
@@ -177,16 +162,16 @@ export class ListProviderComponent implements OnInit, OnDestroy {
     this._coreSidebarService.getSidebarRegistry(name).toggleOpen();
   }
 
-  modalOpenDanger(modalDanger, provider) {
-    this.providerRemove = provider
+  modalOpenDanger(modalDanger, category) {
+    this.categoryRemove = category
     this.modalService.open(modalDanger, {
       centered: true,
       windowClass: 'modal modal-danger'
     });
   }
 
-  removerFornecedor() {
-    this.httpClient.delete('http://localhost:8080/providers/' + this.providerRemove.id).subscribe(data => {
+  removeCategory() {
+    this._chargeCategoryService.removeCategory(this.categoryRemove.id).then(data => {
         this.refreshPage();
       }, err => {
         let message = err.error.message
@@ -215,35 +200,34 @@ export class ListProviderComponent implements OnInit, OnDestroy {
 
   modalEditOpenForm(modalForm, row) {
     console.log('Row: ', row);
-    this.providerEdit.id = row.id;
-    this.providerEdit.fantasyName = row.fantasyName;
-    this.providerEdit.socialName = row.socialName;
-    this.providerEdit.cnpj = row.cnpj;
-    this.providerEdit.inscription = row.inscription;
+    this.chargeCategoryEdit.id = row.id;
+    this.chargeCategoryEdit.description = row.description;
+    this.chargeCategoryEdit.identifierNumber = row.identifierNumber;
+    this.chargeCategoryEdit.subCategories = row.subCategories;
 
     this.modalService.open(modalForm);
   }
 
   updateProvider() {
-    this._providerService.updateProvider(this.providerEdit, this.providerEdit.id).then(data => {
-        if (data.id) {
-          this.refreshPage();
-          this.success = {
-            title: 'Sucesso ao Editar',
-            message: 'Sucesso ao editar o Fornecedor com ID: ' + data.id
-          }
+    this._chargeCategoryService.updateProvider(this.chargeCategoryEdit, this.chargeCategoryEdit.id).then(data => {
+      if (data.id) {
+        this.refreshPage();
+        this.success = {
+          title: 'Sucesso ao Editar',
+          message: 'Sucesso ao editar o Fornecedor com ID: ' + data.id
         }
-      }, err => {
-        let message = err.error.message
-        console.log('Error: ', message)
-        this.errors = [
-          {
-            title: 'Erro',
-            message: message
-          }
-        ]
       }
-    ); 
+    }, err => {
+      let message = err.error.message
+      console.log('Error: ', message)
+      this.errors = [
+        {
+          title: 'Erro',
+          message: message
+        }
+      ]
+    }
+    );
     this.modalService.dismissAll();
   }
 }

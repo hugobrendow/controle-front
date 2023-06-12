@@ -16,7 +16,7 @@ const routes = [
     data: { animation: 'sample' }
   },
   {
-    path: 'home',
+    path: 'parametros',
     component: HomeComponent,
     data: { animation: 'home' }
   }

@@ -7,16 +7,16 @@
         <!-- Modal -->
         <ng-template #modalDanger let-modal>
           <div class="modal-header">
-            <h5 class="modal-title" id="myModalLabel160">Remover Fornecedor</h5>
+            <h5 class="modal-title" id="myModalLabel160">Remover Categoria</h5>
             <button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
           <div class="modal-body" tabindex="0" ngbAutofocus>
-            Você realmente deseja remover o fornecedor: {{providerRemove.cnpj}} - {{providerRemove.socialName}}?
+            Você realmente deseja remover a categoria: {{categoryRemove.description}}?
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-danger" (click)="removerFornecedor()" rippleEffect>
+            <button type="button" class="btn btn-danger" (click)="removeCategory()" rippleEffect>
               Sim
             </button>
           </div>
@@ -69,9 +69,9 @@
                       <option value="100">100</option>
                     </select>
                   </label>
-                  <button class="btn btn-primary ml-1" rippleEffect (click)="toggleSidebar('new-provider-sidebar')">
+                  <button class="btn btn-primary ml-1" rippleEffect (click)="toggleSidebar('create-category')">
                     <i data-feather="plus" class="d-sm-none d-inline-block mr-0 mr-sm-1"></i
-                    ><span class="d-none d-sm-inline-block">Adicionar Fornecedor</span>
+                    ><span class="d-none d-sm-inline-block">Adicionar Categoria</span>
                   </button>
                 </div>
               </div>
@@ -106,43 +106,31 @@
                 <a routerLink="/apps/invoice/preview/{{ id }}" class="font-weight-bold">#{{ id }}</a>
               </ng-template>
             </ngx-datatable-column>
-            <ngx-datatable-column name="Nome Fantasia" prop="fantasyName" [width]="250">
+            <ngx-datatable-column name="Descrição" prop="description" [width]="250">
               <ng-template let-row="row" let-name="value" ngx-datatable-cell-template>
                 <div class="d-flex align-items-center">
-                  <!--<div *ngIf="row.avatar.length > 0; else customAvatar">
-                    <img
-                      class="rounded-circle mr-1"
-                      src="{{ row.avatar }}"
-                      height="32"
-                      width="32"
-                      alt="datatable-avatar"
-                    />
-                  </div>
-                  <ng-template #customAvatar>
-                    <div class="avatar mr-1 ml-0 bg-light-success">
-                      <div class="avatar-content">{{ name | initials }}</div>
-                    </div>
-                  </ng-template>-->
                   <div class="cell-line-height">
                     <span class="font-weight-bold d-block text-nowrap font-medium-1">{{ name }}</span>
                   </div>
                 </div>
               </ng-template>
             </ngx-datatable-column>
-            <ngx-datatable-column name="Razão Social" prop="socialName" [width]="50">
+            <ngx-datatable-column name="Número Identificador" prop="identifierNumber" [width]="50">
               <ng-template let-total="value" ngx-datatable-cell-template>
                 <div>
                   {{ total }}
                 </div>
               </ng-template>
             </ngx-datatable-column>
-            <ngx-datatable-column name="CNPJ" prop="cnpj" [width]="50">
-                <ng-template let-total="value" ngx-datatable-cell-template>
-                  <div>
-                    {{ total }}
-                  </div>
-                </ng-template>
-              </ngx-datatable-column>
+
+            <ngx-datatable-column name="Sub-Categorias" prop="subCategories" [width]="50">
+              <ng-template let-total="value" ngx-datatable-cell-template>
+                <div>
+                  {{ total.length }}
+                </div>
+              </ng-template>
+            </ngx-datatable-column>
+            
             <ngx-datatable-column name="Ações" [width]="40" [sortable]="false">
               <ng-template ngx-datatable-cell-template let-row="row">
                 <div class="d-flex align-items-center col-actions">
@@ -169,9 +157,9 @@
 
     <core-sidebar
       class="modal modal-slide-in sidebar-todo-modal fade"
-      name="new-provider-sidebar"
+      name="create-category"
       overlayClass="modal-backdrop">
-      <app-new-provider-sidebar></app-new-provider-sidebar>
+      <app-create-category></app-create-category>
     </core-sidebar>
 
       <!-- Edit Provider -->
@@ -179,7 +167,7 @@
         <!-- Modal -->
         <ng-template #modalEditForm let-modal>
           <div class="modal-header">
-            <h4 class="modal-title" id="myModalLabel1">Editar Fornecedor</h4>
+            <h4 class="modal-title" id="myModalLabel1">Editar Categoria</h4>
             <button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -188,92 +176,116 @@
             <form action="#">
               <label>ID: </label>
               <div class="form-group">
-                <input [ngModelOptions]="{standalone: true}" [(ngModel)]="providerEdit.id" type="text" placeholder="ID" class="form-control" disabled/>
+                <input [ngModelOptions]="{standalone: true}" [(ngModel)]="chargeCategoryEdit.id" type="text" placeholder="ID" class="form-control" disabled/>
               </div>
 
-              <label>Nome Fantasia: </label>
+              <label>Descrição: </label>
               <div class="form-group">
                 <input
                   type="text"
                   class="form-control dt-full-name"
                   id="basic-icon-default-fullname"
-                  placeholder="Nome Fantasia"
-                  name="provider-fantasyName"
+                  placeholder="Descrição"
+                  name="provider-description"
                   [ngModelOptions]="{standalone: true}"
-                  [(ngModel)]="providerEdit.fantasyName"
-                  [class.error]="modalEditForm.submitted && FFantasyName.invalid"
-                  #FFantasyName="ngModel"
+                  [(ngModel)]="chargeCategoryEdit.description"
+                  [class.error]="modalEditForm.submitted && Fdescription.invalid"
+                  #Fdescription="ngModel"
                   required
-                  aria-label="Nome Fantasia"
+                  aria-label="Descrição"
                   aria-describedby="basic-icon-default-fullname2"
                 />
-                <span *ngIf="modalEditForm.submitted && FFantasyName.invalid" class="invalid-form">
-                  <small class="form-text text-danger" *ngIf="FFantasyName.errors.required">Este campo é obrigatório</small>
+                <span *ngIf="modalEditForm.submitted && Fdescription.invalid" class="invalid-form">
+                  <small class="form-text text-danger" *ngIf="Fdescription.errors.required">Este campo é obrigatório</small>
                 </span>
               </div>
 
-              <label>Razão Social: </label>
+              <label>Identificador: </label>
               <div class="form-group">
                 <input
                   type="text"
                   class="form-control dt-full-name"
                   id="basic-icon-default-fullname"
-                  placeholder="Razão Social"
-                  name="provier-socialName"
+                  placeholder="Número Identificador"
+                  name="provier-identifierNumber"
                   [ngModelOptions]="{standalone: true}"
-                  [(ngModel)]="providerEdit.socialName"
-                  [class.error]="modalEditForm.submitted && FSocialName.invalid"
-                  #FSocialName="ngModel"
+                  [(ngModel)]="chargeCategoryEdit.identifierNumber"
+                  [class.error]="modalEditForm.submitted && FidentifierNumber.invalid"
+                  #FidentifierNumber="ngModel"
                   required
-                  aria-label="Razão Social"
+                  aria-label="Número Identificador"
                   aria-describedby="basic-icon-default-fullname2"
                 />
-                <span *ngIf="modalEditForm.submitted && FSocialName.invalid" class="invalid-form">
-                  <small class="form-text text-danger" *ngIf="FSocialName.errors.required">Este campo é obrigatório</small>
+                <span *ngIf="modalEditForm.submitted && FidentifierNumber.invalid" class="invalid-form">
+                  <small class="form-text text-danger" *ngIf="FidentifierNumber.errors.required">Este campo é obrigatório</small>
                 </span>
               </div>
 
-              <label>Inscrição Estadual: </label>
-              <div class="form-group">
-                <input
-                  type="text"
-                  class="form-control dt-full-name"
-                  id="basic-icon-default-fullname"
-                  placeholder="Inscrição Estadual"
-                  name="provier-inscription"
-                  [ngModelOptions]="{standalone: true}"
-                  [(ngModel)]="providerEdit.inscription"
-                  [class.error]="modalEditForm.submitted && FInscription.invalid"
-                  #FInscription="ngModel"
-                  required
-                  aria-label="Inscrição Estadual"
-                  aria-describedby="basic-icon-default-fullname2"
-                />
-                <span *ngIf="modalEditForm.submitted && FInscription.invalid" class="invalid-form">
-                  <small class="form-text text-danger" *ngIf="FInscription.errors.required">Este campo é obrigatório</small>
-                </span>
+              <div *ngFor="let sub of chargeCategoryEdit.subCategories">
+                <div class="col-md-12 col-lg-12">
+                  <div class="card">
+                    <div class="card-body">
+                      <h4 class="card-title">
+                        <button (click)="deleteItem(i)" class="btn p-0">
+                            <i data-feather="x" [size]="18" class="cursor-pointer"></i>
+                        </button>
+                        Sub-Categoria
+                      </h4>
+                      <p class="card-text"></p>
+
+                      <label>ID: </label>
+                      <div class="form-group">
+                        <input
+                          type="text"
+                          class="form-control dt-full-name"
+                          placeholder="ID"
+                          name="provier-identifierNumber"
+                          [ngModelOptions]="{standalone: true}"
+                          [(ngModel)]="sub.id"
+                          required
+                          disabled
+                          aria-label="ID"
+                          aria-describedby="basic-icon-default-fullname2"
+                        />
+                      </div>
+
+                      <label>Identificador: </label>
+                      <div class="form-group">
+                        <input
+                          type="text"
+                          class="form-control dt-full-name"
+                          placeholder="Número Identificador"
+                          name="provier-identifierNumber"
+                          [ngModelOptions]="{standalone: true}"
+                          [(ngModel)]="sub.identifierNumber"
+                          required
+                          aria-label="Número Identificador"
+                          aria-describedby="basic-icon-default-fullname2"
+                        />
+                      </div>
+
+                      <label>Descrição: </label>
+                      <div class="form-group">
+                        <input
+                          type="text"
+                          class="form-control dt-full-name"
+                          placeholder="Descrição"
+                          name="provier-identifierNumber"
+                          [ngModelOptions]="{standalone: true}"
+                          [(ngModel)]="sub.description"
+                          required
+                          aria-label="Descrição"
+                          aria-describedby="basic-icon-default-fullname2"
+                        />
+                      </div>
+                    </div>
+
+                    
+                  </div>
+                </div>
+                
               </div>
 
-              <label>CNPJ: </label>
-              <div class="form-group">
-                <input
-                  type="text"
-                  class="form-control dt-full-name"
-                  id="basic-icon-default-fullname"
-                  placeholder="CNPJ"
-                  name="provier-cnpj"
-                  [ngModelOptions]="{standalone: true}"
-                  [(ngModel)]="providerEdit.cnpj"
-                  [class.error]="modalEditForm.submitted && FCnpj.invalid"
-                  #FCnpj="ngModel"
-                  required
-                  aria-label="CNPJ"
-                  aria-describedby="basic-icon-default-fullname2"
-                />
-                <span *ngIf="modalEditForm.submitted && FCnpj.invalid" class="invalid-form">
-                  <small class="form-text text-danger" *ngIf="FCnpj.errors.required">Este campo é obrigatório</small>
-                </span>
-              </div>
             </form>
           </div>
           <div class="modal-footer">
@@ -285,6 +297,8 @@
         <!-- / Modal -->
       </div>
     <!--/ Edit Provider -->
+
+    
     
 </div>
   

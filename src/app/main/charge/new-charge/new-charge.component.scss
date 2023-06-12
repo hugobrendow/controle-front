@@ -1,0 +1,11 @@
+@import '@core/scss/base/pages/app-invoice.scss';
+@import '@core/scss/angular/libs/select.component.scss';
+@import '@core/scss/angular/libs/date-time-picker.component.scss';
+@import '@core/scss/angular/libs/flatpickr.component.scss';
+@import "~@ng-select/ng-select/themes/default.theme.css";
+// ... or 
+@import "~@ng-select/ng-select/themes/material.theme.css";
+.more-options-dropdown {
+  white-space: normal;
+}
+

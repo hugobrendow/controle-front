@@ -18,7 +18,7 @@ export class HomeComponent implements OnInit {
    */
   ngOnInit() {
     this.contentHeader = {
-      headerTitle: 'Home',
+      headerTitle: 'Parâmetros',
       actionButton: true,
       breadcrumb: {
         type: '',
@@ -29,7 +29,7 @@ export class HomeComponent implements OnInit {
             link: '/'
           },
           {
-            name: 'Sample',
+            name: 'Parâmetros',
             isLink: false
           }
         ]
